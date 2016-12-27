@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New tab</title>
+    <link rel="stylesheet" href="css/gridious.min.css">
+    <link rel="stylesheet" href="libs/font-awesome-4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="libs/pikaday/pikaday.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="main-title">
+        <h1><img src="images/logo.png" />Day Counter</h1>
+        <a class="transition" id="add-counter-btn" href="#">Add New Day Counter</a>
+    </div><!-- End main-title -->
+    <ul id="counters">
+    </ul><!-- End counters -->
+    </div>
+    <div id="add-counter" class="transition">
+        <div id="add-counter-modal" class="transition">
+            <div id="modal-header">
+                <h2>Add a New Day Counter</h2>
+                <a id="close-modal" href="#"><i class="fa fa-times" aria-hidden="true"></i></a>
+            </div><!-- End modal-header -->
+            <div id="modal-content">
+                <p id="event-name-error">
+                    Sorry, the event name can't be empty.
+                </p>
+                <p id="event-date-error">
+                    Sorry, the event date format is invalid. The correct format is YYYY-MM-DD.
+                </p>
+                <input id="event-name" class="modal-field transition" type="text" name="name" placeholder="Event Name" />
+                <input id="event-date" class="modal-field transition" type="text" name="date" placeholder="Event Date (YYYY-MM-DD)" />
+                <input id="modal-submit" class="transition" type="submit" name="submit" value="Add Day Counter" />
+            </div><!-- End modal-content -->
+        </div><!-- End add-counter-form -->
+    </div><!-- End add-counter -->
+    <div id="counter-deleted" class="transition">
+        <p>
+            Counter has been deleted. <a id="undo-delete" href="#">Undo</a>
+        </p>
+    </div><!-- End counter-deleted -->
+    <script src="libs/moment/moment.js"></script>
+    <script src="libs/pikaday/pikaday.js"></script>
+    <script src="js/scripts.js"></script>
+</body>
+</html>
