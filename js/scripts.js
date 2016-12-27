@@ -11,8 +11,32 @@ function removeWarnings(eventNameError, eventDateError) {
 }
 
 // TO DO
-function isValidDate(date) {
-    return true;
+function isValidDate(dateStr) {
+
+    if (!/^\d{4}\-\d{2}\-\d{1,2}$/.test(dateStr)) {
+        return false;
+    }
+
+    var date = dateStr.split("-");
+    var year = parseInt(date[0]);
+    var month = parseInt(date[1]);
+    var day = parseInt(date[2]);
+
+    // Do basic validation
+    if (year < 1000 || year > 3000 || month <= 0 || month > 12) {
+        return false;
+    }
+
+    // Store all month lengths
+    var months = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+    // Adjust for leap years
+    if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)) {
+        months[1] = 29;
+    }
+
+    // Return the result after checking days
+    return day > 0 && day <= months[month - 1];
 }
 
 // Calculate the days between 2 dates
@@ -56,6 +80,17 @@ function daysBetween(date) {
     return result;
 }
 
+function setCounterIDs() {
+    var allCounters = document.getElementsByClassName('counter');
+
+    if (allCounters.length > 0) {
+        for (var i = 0; i < allCounters.length; i++) {
+            allCounters[i].id = "counter-" + (i+1);
+        }
+    }
+
+}
+
 // Init function
 function init() {
 
@@ -69,12 +104,18 @@ function init() {
     var eventDateField = document.getElementById('event-date');
     var eventNameError = document.getElementById('event-name-error');
     var eventDateError = document.getElementById('event-date-error');
+    var editCounters = document.getElementsByClassName('counter-edit');
     var deleteCounters = document.getElementsByClassName('counter-delete');
     var deleteConfirm = document.getElementById('counter-deleted');
     var undoDelete = document.getElementById('undo-delete');
-    var storeParent;
-    var timer;
+    var storeParent, storeParentID, timer, currentCount;
 
+    // Get the current counter
+    if (document.getElementsByClassName('counter').length > 0) {
+        currentCount = document.getElementById("counters").lastChild.id.split("-")[1];
+        setCounterIDs();
+    }
+    
     // Init date picker
     var picker = new Pikaday({
         field: document.getElementById('event-date'),
@@ -139,7 +180,8 @@ function init() {
         // Create the counter
         var counter = document.createElement("li");
         counter.classList.add('counter');
-        counter.innerHTML = '<h3>'+eventName+'</h3><span class="event-days">'+dateResult["days"]+'</span><p>'+dateResult["type"]+'</p><span class="event-original">'+dateResult["original"]+'</span><a class="counter-delete transition" href="#">Delete Counter</a>';
+        //counter.id = "counter-"+currentCount;
+        counter.innerHTML = '<a class="counter-delete transition" href="#"><i class="fa fa-times" aria-hidden="true"></i></a><h3>'+eventName+'</h3><span class="event-days">'+dateResult["days"]+'</span><p>'+dateResult["type"]+'</p><span class="event-original">'+dateResult["original"]+'</span><a class="counter-edit transition" href="#">Edit Counter</a>';
         counters.appendChild(counter);
 
         // Store next delete counter button reference
@@ -151,10 +193,12 @@ function init() {
         // Add event listener to the new one
         deleteCounters[nextCounter].addEventListener('click', function(e) {
             var parent = this.parentNode;
+            storeParentID = parseInt(parent.id.split("-")[1]);
             storeParent = parent.parentNode.removeChild(parent);
             deleteConfirm.classList.add('active');
             setTimeout(function() {
                 deleteConfirm.classList.remove('active');
+                setCounterIDs();
             }, 5000);
         });
 
@@ -166,28 +210,50 @@ function init() {
 
         // Clear any warnings
         removeWarnings(eventNameError, eventDateError);
+
+        // Set counter IDs
+        setCounterIDs();
     });
+
+    // Add event listener to edit counter
+    for (var i = 0; i < deleteCounters.length; i++) {
+        editCounters[i].addEventListener('click', function(e) {
+
+        });
+    }
 
     // Add event listener to delete counter
     for (var i = 0; i < deleteCounters.length; i++) {
         deleteCounters[i].addEventListener('click', function(e) {
             var parent = this.parentNode;
+            storeParentID = parseInt(parent.id.split("-")[1]);
             storeParent = parent.parentNode.removeChild(parent);
             deleteConfirm.classList.add('active');
             window.clearTimeout(timer);
             timer = window.setTimeout(function() {
                 deleteConfirm.classList.remove('active');
+                setCounterIDs();
             }, 5000);
         });
     }
 
     // Add event listener to restore counter
     undoDelete.addEventListener('click', function (e) {
-        if (storeParent != null) {
-            e.preventDefault();
-            counters.appendChild(storeParent);
-            storeParent = null;
+        e.preventDefault();
+        if (storeParent != null && storeParentID > 0) {
+            if (storeParentID == 1) {
+                counters.prepend(storeParent);
+            } else {
+                var refNode = document.getElementById("counter-"+(storeParentID-1));
+                if (!refNode.nextSibling) {
+                    counters.appendChild(storeParent);
+                } else {
+                    refNode.parentNode.insertBefore(storeParent, refNode.nextSibling);
+                }
+            }
             deleteConfirm.classList.remove('active');
+            storeParent = null;
+            storeParentID = null;
         }
     });
 
