@@ -13,7 +13,13 @@
     var deleteConfirm = document.getElementById('counter-deleted');
     var undoDelete = document.getElementById('undo-delete');
     var editing = false;
-    var storeParent, storeParentID, timer, editNode;
+    var storeParent, storeParentID, timer, editNode, countersObj;
+
+    // Init date picker
+    var picker = new Pikaday({
+        field: document.getElementById('event-date'),
+        format: 'YYYY-MM-D'
+    });
 
     // Clear all fields
     var clearFields = function (eventNameField, eventDateField) {
@@ -27,7 +33,7 @@
         eventDateError.classList.remove('active');
     }
 
-    // TO DO
+    // Validate the given date
     var isValidDate = function (dateStr) {
 
         if (!/^\d{4}\-\d{2}\-\d{1,2}$/.test(dateStr)) {
@@ -97,6 +103,7 @@
         return result;
     }
 
+    // Set all counter IDs
     var setCounterIDs = function () {
         var allCounters = document.getElementsByClassName('counter');
 
@@ -106,14 +113,13 @@
                 allCounters[i].id = "counter-" + (i+1);
                 countersObj["counter" + (i+1)] = {
                     "event": allCounters[i].children[1].innerHTML,
-                    "days": allCounters[i].children[2].innerHTML,
-                    "type": allCounters[i].children[3].innerHTML,
                     "original": allCounters[i].children[4].innerHTML
                 }
             }
         }
     }
 
+    // Save counter states
     var saveCounters = function () {
         chrome.storage.sync.remove("counters", function() {
             chrome.storage.sync.set({"counters": countersObj}, function() {
@@ -122,6 +128,7 @@
         });
     }
 
+    // Get counter states
     var getCounters = function () {
         chrome.storage.sync.get("counters", function(data) {
             for (var savedCounter in data.counters) {
@@ -132,10 +139,13 @@
                 // Get the counter object
                 var counterObj = data.counters[savedCounter];
 
+                // Get updated counter result
+                var counterResult = daysBetween(counterObj["original"]);
+
                 // Rebuild the counter
                 var counter = document.createElement("li");
                 counter.classList.add('counter');
-                counter.innerHTML = '<a class="counter-delete transition" href="#"><i class="fa fa-times" aria-hidden="true"></i></a><h3>'+counterObj["event"]+'</h3><span class="event-days">'+counterObj["days"]+'</span><p>'+counterObj["type"]+'</p><span class="event-original">'+counterObj["original"]+'</span><a class="counter-edit transition" href="#">Edit Counter</a>';
+                counter.innerHTML = '<a class="counter-delete transition" href="#"><i class="fa fa-times" aria-hidden="true"></i></a><h3>'+counterObj["event"]+'</h3><span class="event-days">'+counterResult["days"]+'</span><p>'+counterResult["type"]+'</p><span class="event-original">'+counterObj["original"]+'</span><a class="counter-edit transition" href="#">Edit Counter</a>';
                 counters.appendChild(counter);
             }
 
@@ -147,6 +157,7 @@
         });
     }
 
+    // Setup the counters
     var setupCounters = function() {
         editCounters = document.getElementsByClassName('counter-edit');
         deleteCounters = document.getElementsByClassName('counter-delete');
@@ -154,6 +165,9 @@
         // Add event listener to edit counter
         for (var i = 0; i < editCounters.length; i++) {
             editCounters[i].addEventListener('click', function(e) {
+                // Reset date picker to today
+                picker.gotoToday();
+
                 // Stop anchor functionality
                 e.preventDefault();
 
@@ -202,14 +216,11 @@
         // Get data
         countersObj = getCounters();
 
-        // Init date picker
-        var picker = new Pikaday({
-            field: document.getElementById('event-date'),
-            format: 'YYYY-MM-D'
-        });
-
         // Add event listener for add counter button
         addCounterBtn.addEventListener('click', function(e) {
+            // Reset date picker to today
+            picker.gotoToday();
+
             // Stop anchor functionality
             e.preventDefault();
 
