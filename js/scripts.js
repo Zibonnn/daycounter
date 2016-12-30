@@ -96,6 +96,12 @@
             result["type"] = "Days Since";
         }
 
+        // Set to "Today" if zero
+        if (result["days"] == 0) {
+            result["days"] = "Today";
+            result["type"] = "<br />";
+        }
+
         // Add the original date
         result["original"] = date;
 
