@@ -64,6 +64,7 @@
 
     // Calculate the days between 2 dates
     var daysBetween = function(date) {
+        console.log(date);
 
         // Get day in milliseconds
         var day = 1000 * 60 * 60 * 24;
@@ -148,7 +149,7 @@
                 var counterObj = data.counters[savedCounter];
 
                 // Get updated counter result
-                var counterResult = daysBetween(counterObj.orginial);
+                var counterResult = daysBetween(counterObj.original);
 
                 // Rebuild the counter
                 var counter = document.createElement("li");

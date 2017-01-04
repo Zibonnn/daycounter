@@ -9,6 +9,10 @@ Day Counter is an easy-to-use Chrome Extension that allows you to create multipl
 
 # Changelog
 
+### 1.6
+
+- Fixed error causing storage to not working as intended
+
 ### 1.5
 
 - Fixed bug where extension icon would just create a new tab (potentially opening another extension)
