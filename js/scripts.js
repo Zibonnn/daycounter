@@ -1,4 +1,4 @@
-(function () {
+(function() {
     // Store references needed
     var counters = document.getElementById('counters');
     var addCounterBtn = document.getElementById('add-counter-btn');
@@ -22,19 +22,19 @@
     });
 
     // Clear all fields
-    var clearFields = function (eventNameField, eventDateField) {
+    var clearFields = function(eventNameField, eventDateField) {
         eventNameField.value = '';
         eventDateField.value = '';
-    }
+    };
 
     // Remove all warnings
-    var removeWarnings = function (eventNameError, eventDateError) {
+    var removeWarnings = function(eventNameError, eventDateError) {
         eventNameError.classList.remove('active');
         eventDateError.classList.remove('active');
-    }
+    };
 
     // Validate the given date
-    var isValidDate = function (dateStr) {
+    var isValidDate = function(dateStr) {
 
         if (!/^\d{4}\-\d{2}\-\d{1,2}$/.test(dateStr)) {
             return false;
@@ -51,22 +51,22 @@
         }
 
         // Store all month lengths
-        var months = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+        var months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
         // Adjust for leap years
-        if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)) {
+        if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) {
             months[1] = 29;
         }
 
         // Return the result after checking days
         return day > 0 && day <= months[month - 1];
-    }
+    };
 
     // Calculate the days between 2 dates
-    var daysBetween = function (date) {
+    var daysBetween = function(date) {
 
         // Get day in milliseconds
-        var day = 1000*60*60*24;
+        var day = 1000 * 60 * 60 * 24;
 
         // Get current time and convert to ISO string
         var currentTime = new Date();
@@ -89,53 +89,55 @@
 
         // If given date is in future, use days left, otherwise, days since
         if (givenDate > currentDate) {
-            result["days"] = Math.round((givenDate.getTime() - currentDate.getTime()) / day);
-            result["type"] = "Days Until";
+            result.days = Math.round((givenDate.getTime() - currentDate.getTime()) / day);
+            result.type = "Days Until";
         } else {
-            result["days"] = Math.round((currentDate.getTime() - givenDate.getTime()) / day);
-            result["type"] = "Days Since";
+            result.days = Math.round((currentDate.getTime() - givenDate.getTime()) / day);
+            result.type = "Days Since";
         }
 
         // Set to "Today" if zero
-        if (result["days"] == 0) {
-            result["days"] = "Today";
-            result["type"] = "<br />";
+        if (result.days === 0) {
+            result.days = "Today";
+            result.type = "<br />";
         }
 
         // Add the original date
-        result["original"] = date;
+        result.original = date;
 
         // Return the result
         return result;
-    }
+    };
 
     // Set all counter IDs
-    var setCounterIDs = function () {
+    var setCounterIDs = function() {
         var allCounters = document.getElementsByClassName('counter');
 
         countersObj = {};
         if (allCounters.length > 0) {
             for (var i = 0; i < allCounters.length; i++) {
-                allCounters[i].id = "counter-" + (i+1);
-                countersObj["counter" + (i+1)] = {
+                allCounters[i].id = "counter-" + (i + 1);
+                countersObj["counter" + (i + 1)] = {
                     "event": allCounters[i].children[1].innerHTML,
                     "original": allCounters[i].children[4].innerHTML
-                }
+                };
             }
         }
-    }
+    };
 
     // Save counter states
-    var saveCounters = function () {
+    var saveCounters = function() {
         chrome.storage.sync.remove("counters", function() {
-            chrome.storage.sync.set({"counters": countersObj}, function() {
+            chrome.storage.sync.set({
+                "counters": countersObj
+            }, function() {
                 console.log("Counters updated.");
             });
         });
-    }
+    };
 
     // Get counter states
-    var getCounters = function () {
+    var getCounters = function() {
         chrome.storage.sync.get("counters", function(data) {
             for (var savedCounter in data.counters) {
 
@@ -146,12 +148,12 @@
                 var counterObj = data.counters[savedCounter];
 
                 // Get updated counter result
-                var counterResult = daysBetween(counterObj["original"]);
+                var counterResult = daysBetween(counterObj.orginial);
 
                 // Rebuild the counter
                 var counter = document.createElement("li");
                 counter.classList.add('counter');
-                counter.innerHTML = '<a class="counter-delete transition" href="#"><i class="fa fa-times" aria-hidden="true"></i></a><h3>'+counterObj["event"]+'</h3><span class="event-days">'+counterResult["days"]+'</span><p>'+counterResult["type"]+'</p><span class="event-original">'+counterObj["original"]+'</span><a class="counter-edit transition" href="#">Edit Counter</a>';
+                counter.innerHTML = '<a class="counter-delete transition" href="#"><i class="fa fa-times" aria-hidden="true"></i></a><h3>' + counterObj.event + '</h3><span class="event-days">' + counterResult.days + '</span><p>' + counterResult.type + '</p><span class="event-original">' + counterObj.original + '</span><a class="counter-edit transition" href="#">Edit Counter</a>';
                 counters.appendChild(counter);
             }
 
@@ -161,7 +163,7 @@
             // Setup counters
             setupCounters();
         });
-    }
+    };
 
     // Setup the counters
     var setupCounters = function() {
@@ -211,10 +213,10 @@
                 }, 5000);
             });
         }
-    }
+    };
 
     // Init function
-    var init = function () {
+    var init = function() {
 
         // Create object to hold all counters
         countersObj = {};
@@ -267,7 +269,7 @@
             var errors = false;
 
             // Validate event name
-            if (eventName == '' || eventName == null) {
+            if (eventName === '' || eventName === null) {
                 eventNameError.classList.add('active');
                 errors = true;
             } else {
@@ -275,7 +277,7 @@
             }
 
             // Validate event date
-            if (eventDate == '' || eventDate == null || !isValidDate(eventDate)) {
+            if (eventDate === '' || eventDate === null || !isValidDate(eventDate)) {
                 eventDateError.classList.add('active');
                 errors = true;
             } else {
@@ -291,16 +293,16 @@
             // If editing, make changes, otherwise create new node
             if (editing) {
                 editNode.children[1].innerHTML = eventName;
-                editNode.children[2].innerHTML = dateResult["days"];
-                editNode.children[3].innerHTML = dateResult["type"];
-                editNode.children[4].innerHTML = dateResult["original"];
+                editNode.children[2].innerHTML = dateResult.days;
+                editNode.children[3].innerHTML = dateResult.type;
+                editNode.children[4].innerHTML = dateResult.original;
                 editNode = null;
                 editing = false;
             } else {
                 // Create the counter
                 var counter = document.createElement("li");
                 counter.classList.add('counter');
-                counter.innerHTML = '<a class="counter-delete transition" href="#"><i class="fa fa-times" aria-hidden="true"></i></a><h3>'+eventName+'</h3><span class="event-days">'+dateResult["days"]+'</span><p>'+dateResult["type"]+'</p><span class="event-original">'+dateResult["original"]+'</span><a class="counter-edit transition" href="#">Edit Counter</a>';
+                counter.innerHTML = '<a class="counter-delete transition" href="#"><i class="fa fa-times" aria-hidden="true"></i></a><h3>' + eventName + '</h3><span class="event-days">' + dateResult.days + '</span><p>' + dateResult.type + '</p><span class="event-original">' + dateResult.original + '</span><a class="counter-edit transition" href="#">Edit Counter</a>';
                 counters.appendChild(counter);
                 setupCounters();
             }
@@ -325,13 +327,13 @@
         });
 
         // Add event listener to restore counter
-        undoDelete.addEventListener('click', function (e) {
+        undoDelete.addEventListener('click', function(e) {
             e.preventDefault();
-            if (storeParent != null && storeParentID > 0) {
+            if (storeParent !== null && storeParentID > 0) {
                 if (storeParentID == 1) {
                     counters.prepend(storeParent);
                 } else {
-                    var refNode = document.getElementById("counter-"+(storeParentID-1));
+                    var refNode = document.getElementById("counter-" + (storeParentID - 1));
                     if (!refNode.nextSibling) {
                         counters.appendChild(storeParent);
                     } else {
@@ -344,10 +346,10 @@
             }
         });
 
-    }
+    };
 
     // Wait for DOM content to have loaded
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
 
         // Call setup function
         init();
