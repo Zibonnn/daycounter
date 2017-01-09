@@ -1,0 +1,37 @@
+{
+  "name": "daycounter",
+  "version": "2.0.0",
+  "description": "Chrome Extension to track days until or since events easily on each new tab.",
+  "main": "js/scripts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RyanFitzgerald/daycounter.git"
+  },
+  "keywords": [
+    "chrome",
+    "extension",
+    "day",
+    "counter",
+    "tracker",
+    "events"
+  ],
+  "author": "Ryan Fitzgerald",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RyanFitzgerald/daycounter/issues"
+  },
+  "homepage": "https://github.com/RyanFitzgerald/daycounter#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.3.2",
+    "gulp-uglify": "^2.0.0"
+  }
+}

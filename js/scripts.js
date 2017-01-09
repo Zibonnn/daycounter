@@ -1,5 +1,5 @@
 (function() {
-    // Store references needed
+    // Store references needed and define variables
     var counters = document.getElementById('counters');
     var addCounterBtn = document.getElementById('add-counter-btn');
     var addCounter = document.getElementById('add-counter');
@@ -9,14 +9,18 @@
     var eventDateField = document.getElementById('event-date');
     var eventNameError = document.getElementById('event-name-error');
     var eventDateError = document.getElementById('event-date-error');
-    var editCounters, deleteCounters;
     var deleteConfirm = document.getElementById('counter-deleted');
     var undoDelete = document.getElementById('undo-delete');
+    var settingsToggle = document.getElementById('settings-toggle');
+    var settings = document.getElementById('settings');
+    var settingsSize = document.getElementById('setting-size-list');
+    var settingsScheme = document.getElementById('setting-scheme-list');
+    var settingsSave = document.getElementById('settings-save');
     var editing = false;
-    var storeParent, storeParentID, timer, editNode, countersObj;
+    var editCounters, deleteCounters, storeParent, storeParentID, timer, editNode, countersObj, settingsObj;
 
     // Init date picker
-    var picker = new Pikaday({
+    picker = new Pikaday({
         field: document.getElementById('event-date'),
         format: 'YYYY-MM-D'
     });
@@ -36,10 +40,12 @@
     // Validate the given date
     var isValidDate = function(dateStr) {
 
+        // Return if invalid format
         if (!/^\d{4}\-\d{2}\-\d{1,2}$/.test(dateStr)) {
             return false;
         }
 
+        // Store year, month, and day
         var date = dateStr.split("-");
         var year = parseInt(date[0]);
         var month = parseInt(date[1]);
@@ -64,8 +70,6 @@
 
     // Calculate the days between 2 dates
     var daysBetween = function(date) {
-        console.log(date);
-
         // Get day in milliseconds
         var day = 1000 * 60 * 60 * 24;
 
@@ -112,22 +116,46 @@
 
     // Set all counter IDs
     var setCounterIDs = function() {
+        // Store counters
         var allCounters = document.getElementsByClassName('counter');
 
+        // Empty the counters object
         countersObj = {};
+
+        // If counters exist, loop over them
         if (allCounters.length > 0) {
             for (var i = 0; i < allCounters.length; i++) {
+                // Set the ID of the counter
                 allCounters[i].id = "counter-" + (i + 1);
+
+                // Add the counter to the counter object with reference as
+                // the ID of it
                 countersObj["counter" + (i + 1)] = {
-                    "event": allCounters[i].children[1].innerHTML,
-                    "original": allCounters[i].children[4].innerHTML
+                    "event": allCounters[i].children[2].innerHTML,
+                    "original": allCounters[i].children[5].innerHTML
                 };
             }
         }
     };
 
+    // Create counter
+    var createCounter = function(cEvent, cDays, cType, cOriginal) {
+        // Create the counter list element
+        var counter = document.createElement("li");
+
+        // Add counter class
+        counter.classList.add('counter');
+
+        // Create the HTML
+        counter.innerHTML = '<div class="counter-move"><a class="counter-mover" data-direction="back" href="#"><i class="fa fa-chevron-left" aria-hidden="true"></i></a><a class="counter-mover" data-direction="forward" href="#"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></div><a class="counter-delete transition" href="#"><i class="fa fa-times" aria-hidden="true"></i></a><h3>' + cEvent + '</h3><span class="event-days">' + cDays + '</span><p>' + cType + '</p><span class="event-original">' + cOriginal + '</span><a class="counter-edit transition" href="#">Edit Counter</a>';
+
+        // Append it to the other counters
+        counters.appendChild(counter);
+    };
+
     // Save counter states
     var saveCounters = function() {
+        // Clear counters storage and set new counters
         chrome.storage.sync.remove("counters", function() {
             chrome.storage.sync.set({
                 "counters": countersObj
@@ -152,10 +180,7 @@
                 var counterResult = daysBetween(counterObj.original);
 
                 // Rebuild the counter
-                var counter = document.createElement("li");
-                counter.classList.add('counter');
-                counter.innerHTML = '<a class="counter-delete transition" href="#"><i class="fa fa-times" aria-hidden="true"></i></a><h3>' + counterObj.event + '</h3><span class="event-days">' + counterResult.days + '</span><p>' + counterResult.type + '</p><span class="event-original">' + counterObj.original + '</span><a class="counter-edit transition" href="#">Edit Counter</a>';
-                counters.appendChild(counter);
+                createCounter(counterObj.event, counterResult.days, counterResult.type, counterObj.original);
             }
 
             // Set the counter IDs again
@@ -168,67 +193,162 @@
 
     // Setup the counters
     var setupCounters = function() {
+
+        // Store reference to counter buttons
         editCounters = document.getElementsByClassName('counter-edit');
         deleteCounters = document.getElementsByClassName('counter-delete');
+        moveCounters = document.getElementsByClassName('counter-mover');
 
         // Add event listener to edit counter
-        for (var i = 0; i < editCounters.length; i++) {
-            editCounters[i].addEventListener('click', function(e) {
-                // Reset date picker to today
-                picker.gotoToday();
-
-                // Stop anchor functionality
-                e.preventDefault();
-
-                // Set editing to true
-                editing = true;
-
-                // Ensure values are correct
-                document.getElementById('modal-header-title').innerHTML = "Edit Day Counter";
-                document.getElementById('modal-submit').value = "Save Day Counter";
-
-                // Get current node
-                editNode = this.parentNode;
-
-                // Set values
-                document.getElementById('event-name').value = editNode.children[1].innerHTML;
-                document.getElementById('event-date').value = editNode.children[4].innerHTML;
-
-                // Show modal
-                addCounter.classList.add('active');
-            });
+        for (var ei = 0; ei < editCounters.length; ei++) {
+            createEditButtons(editCounters[ei]);
         }
 
         // Add event listener to delete counter
-        for (var i = 0; i < deleteCounters.length; i++) {
-            deleteCounters[i].addEventListener('click', function(e) {
-                var parent = this.parentNode;
-                storeParentID = parseInt(parent.id.split("-")[1]);
-                storeParent = parent.parentNode.removeChild(parent);
-                deleteConfirm.classList.add('active');
-                window.clearTimeout(timer);
-                timer = window.setTimeout(function() {
-                    deleteConfirm.classList.remove('active');
-                    setCounterIDs();
-                    saveCounters();
-                }, 5000);
-            });
+        for (var di = 0; di < deleteCounters.length; di++) {
+            createDeleteButtons(deleteCounters[di]);
         }
+
+        // Add event listener to move counter
+        for (var mi = 0; mi < moveCounters.length; mi++) {
+            createMoveButtons(moveCounters[mi]);
+        }
+    };
+
+    // Create edit button listeners
+    var createEditButtons = function(editBtn) {
+        editBtn.addEventListener('click', function(e) {
+            // Stop anchor functionality
+            e.preventDefault();
+
+            // Get current node
+            editNode = this.parentNode;
+
+            // Set editing to true
+            editing = true;
+
+            // Set date picker to date that is currently there
+            picker.setMoment(moment(editNode.children[5].innerHTML));
+
+            // Ensure values are correct
+            document.getElementById('modal-header-title').innerHTML = "Edit Day Counter";
+            document.getElementById('modal-submit').value = "Save Day Counter";
+
+            // Set values
+            document.getElementById('event-name').value = editNode.children[2].innerHTML;
+            document.getElementById('event-date').value = editNode.children[5].innerHTML;
+
+            // Show modal
+            addCounter.classList.add('active');
+        });
+    };
+
+    // Create delete button listeners
+    var createDeleteButtons = function(deleteBtn) {
+        deleteBtn.addEventListener('click', function(e) {
+            // Store parent node
+            var parent = this.parentNode;
+
+            // Get parent ID and store a reference to node
+            storeParentID = parseInt(parent.id.split("-")[1]);
+            storeParent = parent.parentNode.removeChild(parent);
+
+            // Add delete class
+            deleteConfirm.classList.add('active');
+
+            // Set the delete undo timer
+            window.clearTimeout(timer);
+            timer = window.setTimeout(function() {
+                deleteConfirm.classList.remove('active');
+                setCounterIDs();
+                saveCounters();
+            }, 5000);
+        });
+    };
+
+    // Create move button listeners
+    var createMoveButtons = function(moveBtn) {
+        moveBtn.addEventListener('click', function(e) {
+            // Get move direction
+            var direction = this.dataset.direction;
+
+            // Get parent ID
+            var parentID = parseInt(this.parentNode.parentNode.id.split("-")[1]);
+
+            // Reorder counters
+            reorderCounter(parentID, direction);
+        });
+    };
+
+    // Reorder counters
+    var reorderCounter = function(counterID, direction) {
+
+        // Store next, current, and previous counters
+        var nextCounter = document.getElementById('counter-'+(counterID+1));
+        var previousCounter = document.getElementById('counter-'+(counterID-1));
+        var currentCounter = document.getElementById('counter-'+counterID);
+
+        // If first and moving back or last and moving forward, return
+        if (previousCounter === null && direction === 'back' || nextCounter === null && direction === 'forward') {
+            return;
+        }
+
+        // Move to requierd position
+        if (direction === 'forward') {
+            nextCounter.parentNode.insertBefore(currentCounter, nextCounter.nextSibling);
+        } else {
+            previousCounter.parentNode.insertBefore(currentCounter, previousCounter);
+        }
+
+        // Fix counter IDs
+        setCounterIDs();
+
+        // Resave counters
+        saveCounters();
+    };
+
+    // Get user settings
+    var getSettings = function() {
+        chrome.storage.sync.get("settings", function(data) {
+            // Set Settings dropdowns
+            settingsSize.value = data.settings.counterSize;
+            settingsScheme.value = data.settings.counterScheme;
+
+            // Add body class
+            document.body.className = settingsScheme.value;
+
+            // Add counter class
+            counters.className = settingsSize.value;
+        });
+    };
+
+    // Set user settings
+    var setSettings = function() {
+        // Clear counters storage and set new counters
+        chrome.storage.sync.remove("settings", function() {
+            chrome.storage.sync.set({
+                "settings": settingsObj
+            }, function() {
+                console.log("Settings updated.");
+                getSettings();
+            });
+        });
     };
 
     // Init function
     var init = function() {
 
-        // Create object to hold all counters
-        countersObj = {};
+        // Get counters
+        getCounters();
 
-        // Get data
-        countersObj = getCounters();
+        // Get settings
+        getSettings();
 
         // Add event listener for add counter button
         addCounterBtn.addEventListener('click', function(e) {
+
             // Reset date picker to today
-            picker.gotoToday();
+            picker.gotoDate(new Date());
 
             // Stop anchor functionality
             e.preventDefault();
@@ -258,7 +378,7 @@
             // Clear any warnings
             removeWarnings(eventNameError, eventDateError);
 
-            // Remove class from body
+            // Remove overflow hidden class from body
             document.body.classList.remove('active');
         });
 
@@ -293,18 +413,17 @@
 
             // If editing, make changes, otherwise create new node
             if (editing) {
-                editNode.children[1].innerHTML = eventName;
-                editNode.children[2].innerHTML = dateResult.days;
-                editNode.children[3].innerHTML = dateResult.type;
-                editNode.children[4].innerHTML = dateResult.original;
+                editNode.children[2].innerHTML = eventName;
+                editNode.children[3].innerHTML = dateResult.days;
+                editNode.children[4].innerHTML = dateResult.type;
+                editNode.children[5].innerHTML = dateResult.original;
                 editNode = null;
                 editing = false;
             } else {
                 // Create the counter
-                var counter = document.createElement("li");
-                counter.classList.add('counter');
-                counter.innerHTML = '<a class="counter-delete transition" href="#"><i class="fa fa-times" aria-hidden="true"></i></a><h3>' + eventName + '</h3><span class="event-days">' + dateResult.days + '</span><p>' + dateResult.type + '</p><span class="event-original">' + dateResult.original + '</span><a class="counter-edit transition" href="#">Edit Counter</a>';
-                counters.appendChild(counter);
+                createCounter(eventName, dateResult.days, dateResult.type, dateResult.original);
+
+                // Setup the counters
                 setupCounters();
             }
 
@@ -329,22 +448,66 @@
 
         // Add event listener to restore counter
         undoDelete.addEventListener('click', function(e) {
+            // Stop anchor functionality
             e.preventDefault();
+
+            // If the parent isn't null and has ID > 0
             if (storeParent !== null && storeParentID > 0) {
+                // If first counter, add to front again
                 if (storeParentID == 1) {
                     counters.prepend(storeParent);
-                } else {
+                } else { // Otherwise, add to neccesary place
+                    // Store reference node
                     var refNode = document.getElementById("counter-" + (storeParentID - 1));
+
+                    // If there is no next sibling, add to end
                     if (!refNode.nextSibling) {
                         counters.appendChild(storeParent);
-                    } else {
+                    } else { // Otherwise, insert where needed
                         refNode.parentNode.insertBefore(storeParent, refNode.nextSibling);
                     }
                 }
+
+                // Remove active class on undo
                 deleteConfirm.classList.remove('active');
+
+                // Reset parent node and ID to null
                 storeParent = null;
                 storeParentID = null;
             }
+        });
+
+        // Add event listener to show settings
+        settingsToggle.addEventListener('click', function() {
+
+            if (this.classList.contains('active')) {
+                this.classList.remove('active');
+                settings.classList.remove('active');
+            } else {
+                this.classList.add('active');
+                settings.classList.add('active');
+            }
+
+        });
+
+        // Save settings
+        settingsSave.addEventListener('click', function(e) {
+
+            // Stop anchor functionality
+            e.preventDefault();
+
+            // Set empty object
+            settingsObj = {};
+
+            // Get counter size
+            settingsObj.counterSize = settingsSize.options[settingsSize.selectedIndex].value;
+
+            // Get colour scheme
+            settingsObj.counterScheme = settingsScheme.options[settingsScheme.selectedIndex].value;
+
+            // Set settings
+            setSettings();
+
         });
 
     };
