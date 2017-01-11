@@ -3,6 +3,16 @@ Day Counter is an easy-to-use Chrome Extension that allows you to create multipl
 
 **Download the chrome extension [here](https://chrome.google.com/webstore/detail/day-counter-new-tab-page/popaiegponeiefbiddhmaphpbdjoegff).**
 
+# Settings
+
+### Counter Size
+
+Easily adjust the size of the counters from small (4 per line), medium (3 per line) or large (2 per line). The default is medium.
+
+### Color Scheme
+
+Change the color scheme of the Day Counter page to any of the colors provided.
+
 # To Do
 - Add sorting options
 - Add filter options
@@ -17,7 +27,7 @@ Day Counter is an easy-to-use Chrome Extension that allows you to create multipl
 ### 2.0
 
 - Added setting for adjusting counter sizes
-- Added setting for adjusting colour schemes
+- Added setting for adjusting color schemes
 - Refactored code to increase performance
 
 ### 1.7

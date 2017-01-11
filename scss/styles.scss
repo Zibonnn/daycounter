@@ -1,11 +1,22 @@
 /* --- Main Styles --- */
 
+$blue: #3498db;
+$red: #e74c3c;
+$green: #2ecc71;
+$yellow: #f1c40f;
+$orange: #e67e22;
+$turquoise: #1abc9c;
+$pink: #e91e63;
+$purple: #9b59b6;
+$dark: #2c3e50;
+$light: #ecf0f1;
+
 html, body {
     margin: 0;
     padding: 0;
     min-height: 100%;
     font-family: sans-serif;
-    background: #3498db;
+    background: $blue;
 }
 
 html {
@@ -35,8 +46,11 @@ body.active {
         padding: 0;
     }
 
-    img {
-        margin-right: 15px;
+    svg {
+        width: 75px;
+        height: 75px;
+        margin-right: -20px;
+        fill: #fff;
     }
 
 }
@@ -51,7 +65,7 @@ body.active {
 
     &:hover {
         background: #fff;
-        color: #3498db;
+        color: $blue;
     }
 }
 
@@ -122,6 +136,10 @@ body.active {
     font-size: 12px;
 }
 
+.event-original-hidden {
+    display: none;
+}
+
 .counter-move {
     position: absolute;
     display: none;
@@ -133,7 +151,7 @@ body.active {
         color: #9c9c9c;
 
         &:hover {
-            color: #3498db;
+            color: $blue;
         }
     }
 }
@@ -146,7 +164,7 @@ body.active {
     color: #9c9c9c;
 
     &:hover {
-        color: #3498db;
+        color: $blue;
     }
 }
 
@@ -200,7 +218,7 @@ body.active {
 
 #modal-header {
     position: relative;
-    background: #3498db;
+    background: $blue;
     padding: 15px;
     text-align: center;
 
@@ -230,10 +248,10 @@ body.active {
         color: #fff;
         display: none;
     }
+}
 
-    &.active {
-        display: block;
-    }
+#event-name-error.active, #event-date-error.active {
+    display: block;
 }
 
 .modal-field {
@@ -247,19 +265,20 @@ body.active {
 
     &:focus {
         outline: none;
-        border-bottom: 2px solid #3498db;
+        border-bottom: 2px solid $blue;
     }
 }
 
 #modal-submit {
-    background: #3498db;
+    background: $blue;
     border: none;
     color: #fff;
     padding: 15px 30px;
     border-radius: 4px;
+    cursor: pointer;
 
     &:hover {
-        background: #1b679a;
+        background: darken($blue, 5%);
     }
 }
 
@@ -293,7 +312,7 @@ body.active {
 #undo-delete {
     text-decoration: none;
     font-weight: bold;
-    color: #3498db;
+    color: $blue;
 
     &:hover {
         text-decoration: underline;
@@ -306,7 +325,7 @@ body.active {
     position: absolute;
     top: 15px;
     left: 15px;
-    color: #165580;
+    color: darken($blue, 10%);
     font-size: 2em;
     cursor: pointer;
 
@@ -356,7 +375,7 @@ body.active {
     a {
         display: inline-block;
         text-decoration: none;
-        background: #3498db;
+        background: $blue;
         border: none;
         color: #fff;
         margin-top: 15px;
@@ -364,7 +383,7 @@ body.active {
         border-radius: 4px;
 
         &:hover {
-            background: #1b679a;
+            background: darken($blue, 5%);
         }
     }
 }
@@ -372,6 +391,479 @@ body.active {
 #setting-scheme {
     h2 {
         margin-top: 15px;
+    }
+}
+
+/* --- Colour Schemes --- */
+
+.red {
+    background: $red;
+
+    body {
+        background: $red;
+    }
+
+    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+        color: $red;
+    }
+
+    .counter-edit {
+        background: darken($red, 30%);
+    }
+
+    #modal-header {
+        background: $red;
+    }
+
+    .modal-field:focus {
+        border-bottom: 2px solid $red;
+    }
+
+    #modal-submit {
+        background: $red;
+
+        &:hover {
+            background: darken($red, 5%);
+        }
+    }
+
+    #settings-toggle {
+        color: darken($red, 10%);
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    #settings {
+        a {
+            background: $red;
+
+            &:hover {
+                background: darken($red, 5%);
+            }
+        }
+    }
+}
+
+.green {
+    background: $green;
+
+    body {
+        background: $green;
+    }
+
+    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+        color: $green;
+    }
+
+    .counter-edit {
+        background: darken($green, 30%);
+    }
+
+    #modal-header {
+        background: $green;
+    }
+
+    .modal-field:focus {
+        border-bottom: 2px solid $green;
+    }
+
+    #modal-submit {
+        background: $green;
+
+        &:hover {
+            background: darken($green, 5%);
+        }
+    }
+
+    #settings-toggle {
+        color: darken($green, 10%);
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    #settings {
+        a {
+            background: $green;
+
+            &:hover {
+                background: darken($green, 5%);
+            }
+        }
+    }
+}
+
+.yellow {
+    background: $yellow;
+
+    body {
+        background: $yellow;
+    }
+
+    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+        color: $yellow;
+    }
+
+    .counter-edit {
+        background: darken($yellow, 30%);
+    }
+
+    #modal-header {
+        background: $yellow;
+    }
+
+    .modal-field:focus {
+        border-bottom: 2px solid $yellow;
+    }
+
+    #modal-submit {
+        background: $yellow;
+
+        &:hover {
+            background: darken($yellow, 5%);
+        }
+    }
+
+    #settings-toggle {
+        color: darken($yellow, 10%);
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    #settings {
+        a {
+            background: $yellow;
+
+            &:hover {
+                background: darken($yellow, 5%);
+            }
+        }
+    }
+}
+
+.orange {
+    background: $orange;
+
+    body {
+        background: $orange;
+    }
+
+    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+        color: $orange;
+    }
+
+    .counter-edit {
+        background: darken($orange, 30%);
+    }
+
+    #modal-header {
+        background: $orange;
+    }
+
+    .modal-field:focus {
+        border-bottom: 2px solid $orange;
+    }
+
+    #modal-submit {
+        background: $orange;
+
+        &:hover {
+            background: darken($orange, 5%);
+        }
+    }
+
+    #settings-toggle {
+        color: darken($orange, 10%);
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    #settings {
+        a {
+            background: $orange;
+
+            &:hover {
+                background: darken($orange, 5%);
+            }
+        }
+    }
+}
+
+.turquoise {
+    background: $turquoise;
+
+    body {
+        background: $turquoise;
+    }
+
+    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+        color: $turquoise;
+    }
+
+    .counter-edit {
+        background: darken($turquoise, 30%);
+    }
+
+    #modal-header {
+        background: $turquoise;
+    }
+
+    .modal-field:focus {
+        border-bottom: 2px solid $turquoise;
+    }
+
+    #modal-submit {
+        background: $turquoise;
+
+        &:hover {
+            background: darken($turquoise, 5%);
+        }
+    }
+
+    #settings-toggle {
+        color: darken($turquoise, 10%);
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    #settings {
+        a {
+            background: $turquoise;
+
+            &:hover {
+                background: darken($turquoise, 5%);
+            }
+        }
+    }
+}
+
+.pink {
+    background: $pink;
+
+    body {
+        background: $pink;
+    }
+
+    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+        color: $pink;
+    }
+
+    .counter-edit {
+        background: darken($pink, 30%);
+    }
+
+    #modal-header {
+        background: $pink;
+    }
+
+    .modal-field:focus {
+        border-bottom: 2px solid $pink;
+    }
+
+    #modal-submit {
+        background: $pink;
+
+        &:hover {
+            background: darken($pink, 5%);
+        }
+    }
+
+    #settings-toggle {
+        color: darken($pink, 10%);
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    #settings {
+        a {
+            background: $pink;
+
+            &:hover {
+                background: darken($pink, 5%);
+            }
+        }
+    }
+}
+
+.purple {
+    background: $purple;
+
+    body {
+        background: $purple;
+    }
+
+    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+        color: $purple;
+    }
+
+    .counter-edit {
+        background: darken($purple, 30%);
+    }
+
+    #modal-header {
+        background: $purple;
+    }
+
+    .modal-field:focus {
+        border-bottom: 2px solid $purple;
+    }
+
+    #modal-submit {
+        background: $purple;
+
+        &:hover {
+            background: darken($purple, 5%);
+        }
+    }
+
+    #settings-toggle {
+        color: darken($purple, 10%);
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    #settings {
+        a {
+            background: $purple;
+
+            &:hover {
+                background: darken($purple, 5%);
+            }
+        }
+    }
+}
+
+.dark {
+    background: $dark;
+
+    body {
+        background: $dark;
+    }
+
+    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+        color: $dark;
+    }
+
+    .counter-edit {
+        background: darken($dark, 30%);
+    }
+
+    #modal-header {
+        background: $dark;
+    }
+
+    .modal-field:focus {
+        border-bottom: 2px solid $dark;
+    }
+
+    #modal-submit {
+        background: $dark;
+
+        &:hover {
+            background: darken($dark, 5%);
+        }
+    }
+
+    #settings-toggle {
+        color: darken($dark, 10%);
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    #settings {
+        a {
+            background: $dark;
+
+            &:hover {
+                background: darken($dark, 5%);
+            }
+        }
+    }
+}
+
+.light {
+    background: $light;
+
+    body {
+        background: $light;
+    }
+
+    #main-title {
+
+        h1 {
+            color: #616377;
+        }
+
+        svg {
+            fill: #616377;
+        }
+    }
+
+    #add-counter-btn {
+        color: #616377;
+        border: 3px solid #616377;
+
+        &:hover {
+            background: #616377;
+            color: #fff;
+        }
+    }
+
+    .counter-move a:hover, .counter-delete:hover, #undo-delete {
+        color: #303244;
+    }
+
+    .counter-edit {
+        background: #303244;
+    }
+
+    #modal-header {
+        background: #303244;
+    }
+
+    .modal-field:focus {
+        border-bottom: 2px solid #303244;
+    }
+
+    #modal-submit {
+        background: #303244;
+
+        &:hover {
+            background: darken(#303244, 5%);
+        }
+    }
+
+    #settings-toggle {
+        color: #b4b6ca;
+
+        &:hover {
+            color: darken(#303244, 30%);
+        }
+    }
+
+    #settings {
+        a {
+            background: #303244;
+
+            &:hover {
+                background: darken(#303244, 5%);
+            }
+        }
     }
 }
 
@@ -385,9 +877,10 @@ body.active {
             font-size: 50px;
         }
 
-        img {
+        svg {
             width: 35px;
-            height: auto;
+            height: 35px;
+            margin-right: -5px;
         }
     }
 

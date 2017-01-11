@@ -132,7 +132,7 @@
                 // the ID of it
                 countersObj["counter" + (i + 1)] = {
                     "event": allCounters[i].children[2].innerHTML,
-                    "original": allCounters[i].children[5].innerHTML
+                    "original": allCounters[i].children[7].innerHTML
                 };
             }
         }
@@ -146,11 +146,17 @@
         // Add counter class
         counter.classList.add('counter');
 
+        // Change format of original
+        cDate = moment(cOriginal).format('ddd, ll');
+
         // Create the HTML
-        counter.innerHTML = '<div class="counter-move"><a class="counter-mover" data-direction="back" href="#"><i class="fa fa-chevron-left" aria-hidden="true"></i></a><a class="counter-mover" data-direction="forward" href="#"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></div><a class="counter-delete transition" href="#"><i class="fa fa-times" aria-hidden="true"></i></a><h3>' + cEvent + '</h3><span class="event-days">' + cDays + '</span><p>' + cType + '</p><span class="event-original">' + cOriginal + '</span><a class="counter-edit transition" href="#">Edit Counter</a>';
+        counter.innerHTML = '<div class="counter-move"><a class="counter-mover" data-direction="back" href="#"><i class="fa fa-chevron-left" aria-hidden="true"></i></a><a class="counter-mover" data-direction="forward" href="#"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></div><a class="counter-delete transition" href="#"><i class="fa fa-times" aria-hidden="true"></i></a><h3>' + cEvent + '</h3><span class="event-days">' + cDays + '</span><p>' + cType + '</p><span class="event-original">' + cDate + '</span><a class="counter-edit transition" href="#">Edit Counter</a><span class="event-original-hidden">' + cOriginal + '</span>';
 
         // Append it to the other counters
         counters.appendChild(counter);
+
+        // Return the counter
+        return counter;
     };
 
     // Save counter states
@@ -169,7 +175,6 @@
     var getCounters = function() {
         chrome.storage.sync.get("counters", function(data) {
             for (var savedCounter in data.counters) {
-
                 // skip loop if the property is from prototype
                 if (!data.counters.hasOwnProperty(savedCounter)) continue;
 
@@ -193,7 +198,6 @@
 
     // Setup the counters
     var setupCounters = function() {
-
         // Store reference to counter buttons
         editCounters = document.getElementsByClassName('counter-edit');
         deleteCounters = document.getElementsByClassName('counter-delete');
@@ -228,7 +232,7 @@
             editing = true;
 
             // Set date picker to date that is currently there
-            picker.setMoment(moment(editNode.children[5].innerHTML));
+            picker.setMoment(moment(editNode.children[7].innerHTML));
 
             // Ensure values are correct
             document.getElementById('modal-header-title').innerHTML = "Edit Day Counter";
@@ -236,7 +240,7 @@
 
             // Set values
             document.getElementById('event-name').value = editNode.children[2].innerHTML;
-            document.getElementById('event-date').value = editNode.children[5].innerHTML;
+            document.getElementById('event-date').value = editNode.children[7].innerHTML;
 
             // Show modal
             addCounter.classList.add('active');
@@ -282,11 +286,10 @@
 
     // Reorder counters
     var reorderCounter = function(counterID, direction) {
-
         // Store next, current, and previous counters
-        var nextCounter = document.getElementById('counter-'+(counterID+1));
-        var previousCounter = document.getElementById('counter-'+(counterID-1));
-        var currentCounter = document.getElementById('counter-'+counterID);
+        var nextCounter = document.getElementById('counter-' + (counterID + 1));
+        var previousCounter = document.getElementById('counter-' + (counterID - 1));
+        var currentCounter = document.getElementById('counter-' + counterID);
 
         // If first and moving back or last and moving forward, return
         if (previousCounter === null && direction === 'back' || nextCounter === null && direction === 'forward') {
@@ -315,10 +318,17 @@
             settingsScheme.value = data.settings.counterScheme;
 
             // Add body class
-            document.body.className = settingsScheme.value;
+            document.documentElement.className = settingsScheme.value;
 
             // Add counter class
             counters.className = settingsSize.value;
+
+            // Wait 0.5s
+            window.setTimeout(function() {
+                // Add transition to html, body
+                document.documentElement.style.transition = "0.5s ease all";
+                document.body.style.transition = "0.5s ease all";
+            }, 500);
         });
     };
 
@@ -346,7 +356,6 @@
 
         // Add event listener for add counter button
         addCounterBtn.addEventListener('click', function(e) {
-
             // Reset date picker to today
             picker.gotoDate(new Date());
 
@@ -416,15 +425,19 @@
                 editNode.children[2].innerHTML = eventName;
                 editNode.children[3].innerHTML = dateResult.days;
                 editNode.children[4].innerHTML = dateResult.type;
-                editNode.children[5].innerHTML = dateResult.original;
+                editNode.children[5].innerHTML = moment(dateResult.original).format('ddd, ll');
+                editNode.children[7].innerHTML = dateResult.original;
                 editNode = null;
                 editing = false;
             } else {
                 // Create the counter
-                createCounter(eventName, dateResult.days, dateResult.type, dateResult.original);
+                var counter = createCounter(eventName, dateResult.days, dateResult.type, dateResult.original);
 
-                // Setup the counters
-                setupCounters();
+                // Setup counter
+                createEditButtons(counter.children[6]);
+                createDeleteButtons(counter.children[1]);
+                createMoveButtons(counter.children[0].children[0]);
+                createMoveButtons(counter.children[0].children[1]);
             }
 
             // Set counter IDs
@@ -454,7 +467,7 @@
             // If the parent isn't null and has ID > 0
             if (storeParent !== null && storeParentID > 0) {
                 // If first counter, add to front again
-                if (storeParentID == 1) {
+                if (storeParentID == 1 || document.getElementsByClassName('counter').length === 0) {
                     counters.prepend(storeParent);
                 } else { // Otherwise, add to neccesary place
                     // Store reference node
@@ -474,6 +487,13 @@
                 // Reset parent node and ID to null
                 storeParent = null;
                 storeParentID = null;
+
+                // Clear the timer
+                window.clearTimeout(timer);
+
+                // Reset and save counters
+                setCounterIDs();
+                saveCounters();
             }
         });
 
