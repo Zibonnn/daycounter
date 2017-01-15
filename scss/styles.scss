@@ -16,13 +16,20 @@ html, body {
     padding: 0;
     min-height: 100%;
     font-family: sans-serif;
-    background: $blue;
+    background-color: $blue;
 }
 
 html {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+body {
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto;
 }
 
 body.active {
@@ -35,27 +42,24 @@ body.active {
 
 /* --- Main Title --- */
 
-#main-title {
-    padding: 50px 15px;
+#no-counters {
+    display: none;
+    padding: 15px;
     text-align: center;
 
-    h1 {
-        font-size: 100px;
-        color: #fff;
-        margin: 0 0 50px 0;
-        padding: 0;
+    img {
+            max-width: 100%;
     }
 
-    svg {
-        width: 75px;
-        height: 75px;
-        margin-right: -20px;
-        fill: #fff;
+    &.active {
+        display: block;
     }
-
 }
 
 #add-counter-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
     display: inline-block;
     color: #fff;
     text-decoration: none;
@@ -203,6 +207,10 @@ body.active {
             top: 0;
             opacity: 1;
         }
+
+        #modal-content {
+            display: block;
+        }
     }
 }
 
@@ -239,6 +247,7 @@ body.active {
 #modal-content {
     padding: 30px 15px;
     text-align: center;
+    display: none;
 
     p {
         background: #bb6c6c;
@@ -397,10 +406,10 @@ body.active {
 /* --- Colour Schemes --- */
 
 .red {
-    background: $red;
+    background-color: $red;
 
     body {
-        background: $red;
+        background-color: $red;
     }
 
     #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
@@ -447,10 +456,10 @@ body.active {
 }
 
 .green {
-    background: $green;
+    background-color: $green;
 
     body {
-        background: $green;
+        background-color: $green;
     }
 
     #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
@@ -497,10 +506,10 @@ body.active {
 }
 
 .yellow {
-    background: $yellow;
+    background-color: $yellow;
 
     body {
-        background: $yellow;
+        background-color: $yellow;
     }
 
     #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
@@ -547,10 +556,10 @@ body.active {
 }
 
 .orange {
-    background: $orange;
+    background-color: $orange;
 
     body {
-        background: $orange;
+        background-color: $orange;
     }
 
     #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
@@ -597,10 +606,10 @@ body.active {
 }
 
 .turquoise {
-    background: $turquoise;
+    background-color: $turquoise;
 
     body {
-        background: $turquoise;
+        background-color: $turquoise;
     }
 
     #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
@@ -647,10 +656,10 @@ body.active {
 }
 
 .pink {
-    background: $pink;
+    background-color: $pink;
 
     body {
-        background: $pink;
+        background-color: $pink;
     }
 
     #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
@@ -697,10 +706,10 @@ body.active {
 }
 
 .purple {
-    background: $purple;
+    background-color: $purple;
 
     body {
-        background: $purple;
+        background-color: $purple;
     }
 
     #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
@@ -747,10 +756,10 @@ body.active {
 }
 
 .dark {
-    background: $dark;
+    background-color: $dark;
 
     body {
-        background: $dark;
+        background-color: $dark;
     }
 
     #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
@@ -797,10 +806,10 @@ body.active {
 }
 
 .light {
-    background: $light;
+    background-color: $light;
 
     body {
-        background: $light;
+        background-color: $light;
     }
 
     #main-title {
@@ -870,19 +879,6 @@ body.active {
 /* --- Media Queries --- */
 
 @media screen and (max-width: 1000px) {
-
-    #main-title {
-
-        h1 {
-            font-size: 50px;
-        }
-
-        svg {
-            width: 35px;
-            height: 35px;
-            margin-right: -5px;
-        }
-    }
 
     .counter {
         width: 250px;

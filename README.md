@@ -14,15 +14,16 @@ Easily adjust the size of the counters from small (4 per line), medium (3 per li
 Change the color scheme of the Day Counter page to any of the colors provided.
 
 # To Do
-- Add sorting options
-- Add filter options
--- Only show 30 days away, for example
-- Add Counter options
--- Recurring event
--- Event types (i.e. birthday, etc)
-- Make "day of" counters more visible / noticeable
+- Add visibility setting (show all counters, future, past)
+- Add toggleable search bar (Google)
 
 # Changelog
+
+### 2.0.1
+
+- Removed large logo (only shown when no counters are active)
+- Repositioned Add New Counter button to the top right
+- Fixed a couple minor CSS issues
 
 ### 2.0
 

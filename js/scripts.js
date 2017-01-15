@@ -1,6 +1,7 @@
 (function() {
     // Store references needed and define variables
     var counters = document.getElementById('counters');
+    var noCounters = document.getElementById('no-counters');
     var addCounterBtn = document.getElementById('add-counter-btn');
     var addCounter = document.getElementById('add-counter');
     var closeModal = document.getElementById('close-modal');
@@ -135,6 +136,11 @@
                     "original": allCounters[i].children[7].innerHTML
                 };
             }
+
+            // Check if no-counters is visible
+            if (noCounters.className === 'active') noCounters.className = '';
+        } else {
+            noCounters.className = 'active';
         }
     };
 
@@ -313,6 +319,10 @@
     // Get user settings
     var getSettings = function() {
         chrome.storage.sync.get("settings", function(data) {
+
+            // Check if settings exist
+            if (typeof data.settings === 'undefined') return;
+
             // Set Settings dropdowns
             settingsSize.value = data.settings.counterSize;
             settingsScheme.value = data.settings.counterScheme;
