@@ -16,6 +16,7 @@
     var settings = document.getElementById('settings');
     var settingsSize = document.getElementById('setting-size-list');
     var settingsScheme = document.getElementById('setting-scheme-list');
+    var settingsVisible = document.getElementById('setting-visible-list');
     var settingsSave = document.getElementById('settings-save');
     var editing = false;
     var editCounters, deleteCounters, storeParent, storeParentID, timer, editNode, countersObj, settingsObj;
@@ -139,6 +140,7 @@
 
             // Check if no-counters is visible
             if (noCounters.className === 'active') noCounters.className = '';
+
         } else {
             noCounters.className = 'active';
         }
@@ -290,6 +292,40 @@
         });
     };
 
+    // Counter filters
+    var counterFilters = function(currentSettings) {
+
+        // Store counters
+        var allCounters = document.getElementsByClassName('counter');
+
+        // Check if setting is set
+        if (typeof currentSettings.counterVisibility === 'undefined') return;
+
+        // Show all
+        for (var c = 0; c < allCounters.length; c++) {
+            allCounters[c].classList.remove('disabled');
+        }
+
+        // If future, hide past
+        if (currentSettings.counterVisibility === 'future') {
+            for (var fc = 0; fc < allCounters.length; fc++) {
+                if (allCounters[fc].children[4].innerHTML.indexOf('Until') === -1) {
+                    allCounters[fc].classList.add('disabled');
+                }
+            }
+        }
+
+        // If past, hide future
+        if (currentSettings.counterVisibility === 'past') {
+            for (var pc = 0; pc < allCounters.length; pc++) {
+                if (allCounters[pc].children[4].innerHTML.indexOf('Since') === -1) {
+                    allCounters[pc].classList.add('disabled');
+                }
+            }
+        }
+
+    };
+
     // Reorder counters
     var reorderCounter = function(counterID, direction) {
         // Store next, current, and previous counters
@@ -327,6 +363,11 @@
             settingsSize.value = data.settings.counterSize;
             settingsScheme.value = data.settings.counterScheme;
 
+            // Backwards compatability
+            if (typeof data.settings.counterVisibility !== 'undefined') {
+                settingsVisible.value = data.settings.counterVisibility;
+            }
+
             // Add body class
             document.documentElement.className = settingsScheme.value;
 
@@ -339,6 +380,9 @@
                 document.documentElement.style.transition = "0.5s ease all";
                 document.body.style.transition = "0.5s ease all";
             }, 500);
+
+            // Check filters
+            counterFilters(data.settings);
         });
     };
 
@@ -534,6 +578,9 @@
 
             // Get colour scheme
             settingsObj.counterScheme = settingsScheme.options[settingsScheme.selectedIndex].value;
+
+            // Get counter visibility
+            settingsObj.counterVisibility = settingsVisible.options[settingsVisible.selectedIndex].value;
 
             // Set settings
             setSettings();

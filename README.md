@@ -14,10 +14,14 @@ Easily adjust the size of the counters from small (4 per line), medium (3 per li
 Change the color scheme of the Day Counter page to any of the colors provided.
 
 # To Do
-- Add visibility setting (show all counters, future, past)
-- Add toggleable search bar (Google)
+- Add date range setting (show all counters within 30 days, etc)
+- Add recurring timer setting (every year repeat)
 
 # Changelog
+
+### 2.0.2
+
+- Added ability to show all counters (default), only future counters, or only past counters
 
 ### 2.0.1
 

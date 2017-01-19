@@ -90,6 +90,8 @@ body.active {
       height: 20px; }
     .counter:hover .counter-move {
       display: block; }
+  .counter.disabled {
+    display: none; }
 
 .event-days {
   font-size: 50px;
@@ -297,7 +299,7 @@ body.active {
     #settings a:hover {
       background: #258cd1; }
 
-#setting-scheme h2 {
+#setting-scheme h2, #setting-visible h2 {
   margin-top: 15px; }
 
 /* --- Colour Schemes --- */

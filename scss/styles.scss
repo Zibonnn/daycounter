@@ -128,6 +128,10 @@ body.active {
             display: block;
         }
     }
+
+    &.disabled {
+        display: none;
+    }
 }
 
 .event-days {
@@ -397,7 +401,7 @@ body.active {
     }
 }
 
-#setting-scheme {
+#setting-scheme, #setting-visible {
     h2 {
         margin-top: 15px;
     }
