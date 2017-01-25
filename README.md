@@ -19,6 +19,10 @@ Change the color scheme of the Day Counter page to any of the colors provided.
 
 # Changelog
 
+### 2.0.3
+
+- Fixed bug where filtering counter visibility doesn't show "Today"
+
 ### 2.0.2
 
 - Added ability to show all counters (default), only future counters, or only past counters

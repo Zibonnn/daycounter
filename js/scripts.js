@@ -309,7 +309,7 @@
         // If future, hide past
         if (currentSettings.counterVisibility === 'future') {
             for (var fc = 0; fc < allCounters.length; fc++) {
-                if (allCounters[fc].children[4].innerHTML.indexOf('Until') === -1) {
+                if (allCounters[fc].children[4].innerHTML.indexOf('Since') !== -1) {
                     allCounters[fc].classList.add('disabled');
                 }
             }
@@ -318,7 +318,7 @@
         // If past, hide future
         if (currentSettings.counterVisibility === 'past') {
             for (var pc = 0; pc < allCounters.length; pc++) {
-                if (allCounters[pc].children[4].innerHTML.indexOf('Since') === -1) {
+                if (allCounters[pc].children[4].innerHTML.indexOf('Until') !== -1) {
                     allCounters[pc].classList.add('disabled');
                 }
             }
