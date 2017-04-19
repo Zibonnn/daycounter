@@ -96,9 +96,10 @@ body.active {
 
 .counter {
     position: relative;
+    cursor: move;
     width: 300px;
     margin: 15px;
-    padding: 25px 15px;
+    padding: 35px 15px;
     display: inline-block;
     background: #fff;
     vertical-align: top;
@@ -120,11 +121,11 @@ body.active {
         box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
 
         .counter-edit {
-            padding: 10px;
+            padding: 5px 0;
             height: 20px;
         }
 
-        .counter-move {
+        .counter-delete {
             display: block;
         }
     }
@@ -140,32 +141,13 @@ body.active {
     color: #303244;
 }
 
-.event-original {
+.event-date {
     font-size: 12px;
-}
-
-.event-original-hidden {
-    display: none;
-}
-
-.counter-move {
-    position: absolute;
-    display: none;
-    top: 5px;
-    left: 5px;
-    font-size: 16px;
-
-    a {
-        color: #9c9c9c;
-
-        &:hover {
-            color: $blue;
-        }
-    }
 }
 
 .counter-delete {
     position: absolute;
+    display: none;
     top: 5px;
     right: 8px;
     font-size: 17px;
@@ -177,12 +159,15 @@ body.active {
 }
 
 .counter-edit {
-    position: relative;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: #0a446b;
     color: #ffffff;
     overflow: hidden;
     height: 0;
-    margin: 15px -15px -25px -15px;
     font-size: 14px;
     text-decoration: none;
     display: block;
@@ -282,6 +267,20 @@ body.active {
     }
 }
 
+#event-recurring {
+    display: block;
+    margin: 0 auto 30px auto;
+    width: 100%;
+    max-width: 400px;
+    border: none;
+    border-bottom: 2px solid #b7b7b7;
+    padding: 8px 0;
+
+    &:focus {
+        outline: none;
+    }
+}
+
 #modal-submit {
     background: $blue;
     border: none;
@@ -299,36 +298,85 @@ body.active {
     z-index: 999999;
 }
 
-/* --- Counter Deleted ---- */
+/* --- Delete Counter ---- */
 
-#counter-deleted {
-    position: fixed;
+#delete-counter {
+    position: absolute;
+    top: 0;
+    right: 0;
     bottom: 0;
     left: 0;
-    right: 0;
-    text-align: center;
-    display: none;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 50px 15px 15px 15px;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    z-index: -1;
 
     &.active {
-        display: block;
-    }
+        opacity: 1;
+        z-index: 99999;
 
-    p {
-        display: inline-block;
-        padding: 15px;
-        border-radius: 4px;
-        background: #fff;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        #delete-counter-modal {
+            top: 0;
+            opacity: 1;
+        }
     }
 }
 
-#undo-delete {
-    text-decoration: none;
-    font-weight: bold;
-    color: $blue;
+#delete-counter-modal {
+    max-width: 350px;
+    background: #fff;
+    margin: 0 auto;
+    position: relative;
+    padding: 15px;
+    font-size: 16px;
+    top: -50px;
+    opacity: 0;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.24), 0 1px 5px 0 rgba(0,0,0,0.22), 0 3px 1px -2px rgba(0,0,0,0.3);
+
+    p {
+        margin: 0;
+		color: #61686e;
+    }
+}
+
+#delete-buttons {
+    margin-top: 30px;
+    text-align: right;
+
+    a {
+        display: inline-block;
+        text-decoration: none;
+    }
+}
+
+#delete-cancel {
+    margin-right: 5px;
+    border: 2px solid #98a1a9;
+    padding: 10px 25px;
+    background: #fff;
+    color: #98a1a9;
+    border-radius: 4px;
+    cursor: pointer;
 
     &:hover {
-        text-decoration: underline;
+        background: #98a1a9;
+        color: #fff;
+    }
+}
+
+#delete-confirm {
+    border: 2px solid #bd5252;
+    background: #bd5252;
+    color: #fff;
+    padding: 10px 50px;
+    border-radius: 4px;
+    cursor: pointer;
+    
+    &:hover {
+        border: 2px solid darken(#bd5252, 5%);
+        background: darken(#bd5252, 5%);
     }
 }
 
@@ -363,6 +411,7 @@ body.active {
     background: #fff;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     text-align: center;
+    z-index: 999;
 
     &:before {
         content: '';
@@ -416,7 +465,7 @@ body.active {
         background-color: $red;
     }
 
-    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+    #add-counter-btn:hover, .counter-delete:hover, #undo-delete {
         color: $red;
     }
 
@@ -466,7 +515,7 @@ body.active {
         background-color: $green;
     }
 
-    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+    #add-counter-btn:hover, .counter-delete:hover, #undo-delete {
         color: $green;
     }
 
@@ -516,7 +565,7 @@ body.active {
         background-color: $yellow;
     }
 
-    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+    #add-counter-btn:hover, .counter-delete:hover, #undo-delete {
         color: $yellow;
     }
 
@@ -566,7 +615,7 @@ body.active {
         background-color: $orange;
     }
 
-    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+    #add-counter-btn:hover, .counter-delete:hover, #undo-delete {
         color: $orange;
     }
 
@@ -616,7 +665,7 @@ body.active {
         background-color: $turquoise;
     }
 
-    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+    #add-counter-btn:hover, .counter-delete:hover, #undo-delete {
         color: $turquoise;
     }
 
@@ -666,7 +715,7 @@ body.active {
         background-color: $pink;
     }
 
-    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+    #add-counter-btn:hover, .counter-delete:hover, #undo-delete {
         color: $pink;
     }
 
@@ -716,7 +765,7 @@ body.active {
         background-color: $purple;
     }
 
-    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+    #add-counter-btn:hover, .counter-delete:hover, #undo-delete {
         color: $purple;
     }
 
@@ -766,7 +815,7 @@ body.active {
         background-color: $dark;
     }
 
-    #add-counter-btn:hover, .counter-move a:hover, .counter-delete:hover, #undo-delete {
+    #add-counter-btn:hover, .counter-delete:hover, #undo-delete {
         color: $dark;
     }
 
@@ -837,7 +886,7 @@ body.active {
         }
     }
 
-    .counter-move a:hover, .counter-delete:hover, #undo-delete {
+    .counter-delete:hover, #undo-delete {
         color: #303244;
     }
 

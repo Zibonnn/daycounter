@@ -14,10 +14,24 @@ Easily adjust the size of the counters from small (4 per line), medium (3 per li
 Change the color scheme of the Day Counter page to any of the colors provided.
 
 # To Do
-- Add date range setting (show all counters within 30 days, etc)
-- Add recurring timer setting (every year repeat)
+
+- Add date range setting (show all counters within 30 days, etc.)
 
 # Changelog
+
+### 3.0.0
+
+- Rewritten from the ground up
+- Same great features as before
+- Allows drag and drop to reorder
+- Allows recurring events Weekly, Monthly, and Yearly
+- Changed delete functionality
+
+### 2.0.4
+
+- Slightly enlarged counters
+- Fixed Setting menu being overlapped by counters
+- Counters no longer "jump" when hovered
 
 ### 2.0.3
 

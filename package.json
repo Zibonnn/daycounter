@@ -1,11 +1,8 @@
 {
   "name": "daycounter",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Chrome Extension to track days until or since events easily on each new tab.",
   "main": "js/scripts.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RyanFitzgerald/daycounter.git"

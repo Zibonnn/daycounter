@@ -73,6 +73,13 @@
                 </p>
                 <input id="event-name" class="modal-field transition" type="text" name="name" placeholder="Event Name" />
                 <input id="event-date" class="modal-field transition" type="text" name="date" placeholder="Event Date (YYYY-MM-DD)" />
+                <select id="event-recurring">
+                    <option value="none">Event Does Not Repeat</option>
+                    <option value="weekly">Event Repeats Weekly</option>
+                    <option value="biweekly">Event Repeats Bi-Weekly</option>
+                    <option value="monthly">Event Repeats Monthly</option>
+                    <option value="yearly">Event Repeats Yearly</option>
+                </select>
                 <input id="modal-submit" class="transition" type="submit" name="submit" value="Add Day Counter" />
             </div>
             <!-- End modal-content -->
@@ -80,14 +87,23 @@
         <!-- End add-counter-form -->
     </div>
     <!-- End add-counter -->
-    <div id="counter-deleted" class="transition">
-        <p>
-            Counter has been deleted. <a id="undo-delete" href="#">Undo</a>
-        </p>
+    <div id="delete-counter" class="transition">
+        <div id="delete-counter-modal" class="transition">
+            <p>
+                Are you sure you want to delete this counter? This cannot be undone.
+            </p>
+            <div id="delete-buttons">
+                <a id="delete-cancel" href="#">No</a>
+                <a id="delete-confirm" href="#">Yes</a>
+            </div>
+            <!-- End delete-buttons -->
+        </div>
+        <!-- End delete-counter-modal -->
     </div>
-    <!-- End counter-deleted -->
+    <!-- End delete-counter -->
     <script src="libs/moment/moment.js"></script>
     <script src="libs/pikaday/pikaday.js"></script>
+    <script src="libs/sortable/Sortable.min.js"></script>
     <script src="js/scripts.js"></script>
 </body>
 
