@@ -57,7 +57,7 @@ body.active {
 /* --- Counter --- */
 #counters {
   text-align: center;
-  padding: 15px;
+  padding: 60px 15px;
   margin: 0 auto;
   max-width: 1100px; }
   #counters.small .counter {

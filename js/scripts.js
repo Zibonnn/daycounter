@@ -230,16 +230,40 @@
                 // Get the counter object
                 var counterObj = data.counters[savedCounter];
 
+                // Store counter properties
+                var loadedCounter = {
+                    days: null,
+                    type: null,
+                    original: null
+                };
+
                 // Backwards compatability
                 if (!counterObj.hasOwnProperty('recurring')) {
                     counterObj.recurring = 'none';
                 }
 
-                // Get updated counter result
-                var counterResult = daysBetween(counterObj.original);
+                // Check if in the past and has a recurrence set
+                if (counterObj.recurring !== 'none' && moment(counterObj.original).isBefore(moment())) {
+                    var recurrenceResult = checkRecurrence(counterObj.recurring, counterObj.original);
+
+                    loadedCounter = {
+                        days: recurrenceResult.days,
+                        type: 'Days Until',
+                        original: recurrenceResult.original,
+                    };
+                } else { // No recurrence update is needed
+                    // Get updated counter result
+                    var counterResult = daysBetween(counterObj.original);
+
+                    loadedCounter = {
+                        days: counterResult.days,
+                        type: counterResult.type,
+                        original: counterObj.original
+                    };
+                }
 
                 // Rebuild the counter
-                createCounter(counterObj.event, counterResult.days, counterResult.type, counterObj.original, counterObj.recurring);
+                createCounter(counterObj.event, loadedCounter.days, loadedCounter.type, loadedCounter.original, counterObj.recurring);
             }
 
             // Set the counter IDs again
@@ -323,7 +347,6 @@
      * @param {object} currentSettings - The current user settings
      */
     var counterFilters = function(currentSettings) {
-
         // Store counters
         var allCounters = document.getElementsByClassName('counter');
 
@@ -352,7 +375,6 @@
                 }
             }
         }
-
     };
 
     /**
@@ -407,6 +429,46 @@
     };
 
     /**
+     * Checks if any counters are recurring and need updating
+     */
+    var checkRecurrence = function(recurrence, originalDate) {
+        // Variable to store new date
+        var newDate;
+
+        // Get new date based on recurrence type
+        if (recurrence === 'weekly') {
+            newDate = moment(originalDate).add(1, 'week').format('YYYY-MM-D');
+            while (moment(newDate).isBefore(moment())) {
+                newDate = moment(newDate).add(1, 'week').format('YYYY-MM-D');
+            }
+        } else if (recurrence === 'biweekly') {
+            newDate = moment(originalDate).add(2, 'week').format('YYYY-MM-D');
+            while (moment(newDate).isBefore(moment())) {
+                newDate = moment(newDate).add(2, 'week').format('YYYY-MM-D');
+            }
+        } else if (recurrence === 'monthly') {
+            newDate = moment(originalDate).add(1, 'month').format('YYYY-MM-D');
+            while (moment(newDate).isBefore(moment())) {
+                newDate = moment(newDate).add(1, 'month').format('YYYY-MM-D');
+            }
+        } else if (recurrence === 'yearly') {
+            newDate = moment(originalDate).add(1, 'year').format('YYYY-MM-D');
+            while (moment(newDate).isBefore(moment())) {
+                newDate = moment(newDate).add(1, 'year').format('YYYY-MM-D');
+            }
+        }
+
+        // Store result from daysBetween call
+        var result = daysBetween(newDate);
+
+        // Return new days and original date
+        return {
+            days: result.days,
+            original: newDate
+        };
+    };
+
+    /**
      * Initializes the page
      */
     var init = function() {
@@ -420,8 +482,6 @@
         addCounterBtn.addEventListener('click', function(e) {
             // Stop anchor functionality
             e.preventDefault();
-
-            console.log(e);
 
             // Reset date picker to today
             picker.gotoDate(new Date());

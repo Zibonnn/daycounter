@@ -1,8 +1,8 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 2,
     "name": "Day Counter - New Tab Page",
     "short_name": "Day Counter",
-    "version": "2.0.4",
+    "version": "3.0.0",
     "description": "Track days until or since life events easily on each new tab.",
     "icons": {
         "16": "images/icon16.png",

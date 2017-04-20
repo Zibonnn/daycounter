@@ -22,10 +22,9 @@ Change the color scheme of the Day Counter page to any of the colors provided.
 ### 3.0.0
 
 - Rewritten from the ground up
-- Same great features as before
-- Allows drag and drop to reorder
-- Allows recurring events Weekly, Monthly, and Yearly
-- Changed delete functionality
+- Changed to drag and drop reorder instead of arrows
+- Allows recurring events Weekly, Bi-Weekly, Monthly, and Yearly
+- Changed delete functionality to confirmation-based
 
 ### 2.0.4
 
