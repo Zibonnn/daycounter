@@ -243,7 +243,7 @@
                 }
 
                 // Check if in the past and has a recurrence set
-                if (counterObj.recurring !== 'none' && moment(counterObj.original).isBefore(moment())) {
+                if (counterObj.recurring !== 'none' && moment(counterObj.original).isBefore(moment().startOf('day'))) {
                     var recurrenceResult = checkRecurrence(counterObj.recurring, counterObj.original);
 
                     loadedCounter = {

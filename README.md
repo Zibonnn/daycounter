@@ -19,6 +19,10 @@ Change the color scheme of the Day Counter page to any of the colors provided.
 
 # Changelog
 
+### 3.0.1
+
+- Fix repeat bug so to not cause recurrence until day after it has occured
+
 ### 3.0.0
 
 - Rewritten from the ground up
