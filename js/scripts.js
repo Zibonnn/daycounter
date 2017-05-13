@@ -20,6 +20,8 @@
     var settingsSize = document.getElementById('setting-size-list');
     var settingsScheme = document.getElementById('setting-scheme-list');
     var settingsVisible = document.getElementById('setting-visible-list');
+    var settingsRange = document.getElementById('setting-range-list');
+    var settingsFader = document.getElementById('setting-fader-list');
     var settingsSave = document.getElementById('settings-save');
 
     // Define Variables
@@ -378,6 +380,68 @@
     };
 
     /**
+     * Filters counter date range by user settings
+     * @param {string} range - The filter range setting
+     */
+    var counterRange = function(range) {
+        // Store counters
+        var allCounters = document.getElementsByClassName('counter');
+
+        // Check if setting is set
+        if (typeof range === 'undefined') return;
+
+        // Show all
+        for (var c = 0; c < allCounters.length; c++) {
+            allCounters[c].classList.remove('disabled');
+        }
+
+        // TO DO, hide any outside range
+    };
+
+    /**
+     * Adds a privacy filter to the fader if enabled
+     * @param {string} fader - The fader value (enable or disable)
+     */
+    var counterFader = function(fader) {
+        // Check if setting is set
+        if (typeof fader === 'undefined') return;
+
+        // Remove any previous event listener
+        document.removeEventListener('mousemove', fadeListener);
+
+        // Remove faded class
+        counters.classList.remove('faded');
+
+        // Clear timer
+        clearTimeout(timer);
+
+        // Check if it is disabled
+        if (fader === 'disable') return;
+
+        // Fade it initially
+        counters.classList.add('faded');
+
+        // Clear timer on mouse move
+        document.addEventListener('mousemove', fadeListener);
+    };
+
+    /**
+     *
+     */
+    var fadeListener = function() {
+        // If there is a timer, clear it and remove class
+        if (timer) {
+            clearTimeout(timer);
+            counters.classList.remove('faded');
+        }
+
+        // Create timer and store reference
+        timer = setTimeout(function() {
+            counters.classList.add('faded');
+        }, 5000);
+    };
+
+    /**
      * Loads the user settings
      */
     var loadSettings = function() {
@@ -390,9 +454,19 @@
             settingsSize.value = data.settings.counterSize;
             settingsScheme.value = data.settings.counterScheme;
 
-            // Backwards compatability
+            // Backwards compatability for counter visibility
             if (typeof data.settings.counterVisibility !== 'undefined') {
                 settingsVisible.value = data.settings.counterVisibility;
+            }
+
+            // Backwards compatability for counter filter range
+            if (typeof data.settings.counterRange !== 'undefined') {
+                settingsRange.value = data.settings.counterRange;
+            }
+
+            // Backwards compatability for fader
+            if (typeof data.settings.fader !== 'undefined') {
+                settingsFader.value = data.settings.fader;
             }
 
             // Add body class
@@ -410,6 +484,12 @@
 
             // Check filters
             counterFilters(data.settings);
+
+            // Check range
+            counterRange(data.settings.counterRange);
+
+            // Check fader
+            counterFader(data.settings.fader);
         });
     };
 
@@ -642,6 +722,12 @@
 
             // Get counter visibility
             settingsObj.counterVisibility = settingsVisible.options[settingsVisible.selectedIndex].value;
+
+            // Get counter filter range
+            settingsObj.counterRange = settingsRange.options[settingsRange.selectedIndex].value;
+
+            // Get fader
+            settingsObj.fader = settingsFader.options[settingsFader.selectedIndex].value;
 
             // Set settings
             saveSettings();

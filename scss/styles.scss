@@ -80,6 +80,7 @@ body.active {
     padding: 60px 15px;
     margin: 0 auto;
     max-width: 1100px;
+    transition: 0.5s ease opacity;
 
     &.small {
         .counter {
@@ -91,6 +92,10 @@ body.active {
         .counter {
             width: 400px;
         }
+    }
+
+    &.faded {
+        opacity: 0.5;
     }
 }
 
@@ -450,7 +455,7 @@ body.active {
     }
 }
 
-#setting-scheme, #setting-visible {
+#setting-scheme, #setting-visible, #setting-fader {
     h2 {
         margin-top: 15px;
     }
