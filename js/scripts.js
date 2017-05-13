@@ -25,7 +25,7 @@
     var settingsSave = document.getElementById('settings-save');
 
     // Define Variables
-    var countersObj, editing, editNode, deleteID, timer;
+    var countersObj, editing, editNode, deleteID, timer, settingsObj;
 
     /**
      * Initialize date picker
@@ -38,11 +38,11 @@
     /**
      * Initialize sortable and call reorder function on end
      */
-    var sortable = Sortable.create(counters, {
+    Sortable.create(counters, {
         animation: 150,
-        onEnd: function (e) {
-    		setCounterIDs();
-    	}
+        onEnd: function () {
+            setCounterIDs();
+        }
     });
 
     /**
@@ -75,13 +75,13 @@
         if (allCounters.length > 0) {
             for (var i = 0; i < allCounters.length; i++) {
                 // Set the ID of the counter
-                allCounters[i].id = "counter-" + (i + 1);
+                allCounters[i].id = 'counter-' + (i + 1);
 
                 // Add information to the counter object
                 countersObj[i + 1] = {
-                    "event": allCounters[i].getElementsByClassName('event-name')[0].innerHTML,
-                    "original": allCounters[i].dataset.original,
-                    "recurring": allCounters[i].dataset.recurring
+                    'event': allCounters[i].getElementsByClassName('event-name')[0].innerHTML,
+                    'original': allCounters[i].dataset.original,
+                    'recurring': allCounters[i].dataset.recurring
                 };
             }
 
@@ -106,7 +106,7 @@
      */
     var createCounter = function(cEvent, cDays, cType, cOriginal, cRecur) {
         // Create the counter list element
-        var counter = document.createElement("li");
+        var counter = document.createElement('li');
 
         // Set data attribute
         counter.dataset.recurring = cRecur;
@@ -116,7 +116,7 @@
         counter.classList.add('counter');
 
         // Change format of original
-        cDate = moment(cOriginal).format('ddd, ll');
+        var cDate = moment(cOriginal).format('ddd, ll');
 
         // Create the HTML
         counter.innerHTML = '<a class="counter-delete transition" href="#"><i class="fa fa-times" aria-hidden="true"></i></a><h3 class="event-name">' + cEvent + '</h3><span class="event-days">' + cDays + '</span><p class="event-type">' + cType + '</p><span class="event-date">' + cDate + '</span><a class="counter-edit transition" href="#">Edit Counter</a>';
@@ -139,7 +139,7 @@
         }
 
         // Store year, month, and day
-        var date = dateStr.split("-");
+        var date = dateStr.split('-');
         var year = parseInt(date[0]);
         var month = parseInt(date[1]);
         var day = parseInt(date[2]);
@@ -172,7 +172,7 @@
         // Get current time and convert to ISO string
         var currentTime = new Date();
         currentTime.setHours(0, 0, 0, 0);
-        currentISO = currentTime.toISOString();
+        var currentISO = currentTime.toISOString();
 
         // Convert given date into ISO string
         var givenISO = new Date(date).toISOString();
@@ -183,23 +183,23 @@
 
         // Create empty results array
         var result = {
-            "days": null,
-            "type": null
+            'days': null,
+            'type': null
         };
 
         // If given date is in future, use days left, otherwise, days since
         if (givenDate > currentDate) {
             result.days = Math.round((givenDate.getTime() - currentDate.getTime()) / day);
-            result.type = "Days Until";
+            result.type = 'Days Until';
         } else {
             result.days = Math.round((currentDate.getTime() - givenDate.getTime()) / day);
-            result.type = "Days Since";
+            result.type = 'Days Since';
         }
 
         // Set to "Today" if zero
         if (result.days === 0) {
-            result.days = "Today";
-            result.type = "<br />";
+            result.days = 'Today';
+            result.type = '<br />';
         }
 
         // Return the result
@@ -211,11 +211,11 @@
      */
     var saveCounters = function() {
         // Clear counters storage and set new counters
-        chrome.storage.sync.remove("counters", function() {
+        chrome.storage.sync.remove('counters', function() {
             chrome.storage.sync.set({
-                "counters": countersObj
+                'counters': countersObj
             }, function() {
-                console.log("Counters updated.");
+                console.log('Counters updated.');
             });
         });
     };
@@ -224,7 +224,7 @@
      * Loads the counter states from Chrome storage
      */
     var loadCounters = function() {
-        chrome.storage.sync.get("counters", function(data) {
+        chrome.storage.sync.get('counters', function(data) {
             for (var savedCounter in data.counters) {
                 // skip loop if the property is from prototype
                 if (!data.counters.hasOwnProperty(savedCounter)) continue;
@@ -314,8 +314,8 @@
             picker.setMoment(moment(editNode.dataset.original));
 
             // Ensure values are correct
-            document.getElementById('modal-header-title').innerHTML = "Edit Day Counter";
-            document.getElementById('modal-submit').value = "Save Day Counter";
+            document.getElementById('modal-header-title').innerHTML = 'Edit Day Counter';
+            document.getElementById('modal-submit').value = 'Save Day Counter';
 
             // Set values
             document.getElementById('event-name').value = editNode.getElementsByClassName('event-name')[0].innerHTML;
@@ -332,12 +332,12 @@
      * @param {object} deleteBtn - The counter's delete button
      */
     var createDeleteButtons = function(deleteBtn) {
-        deleteBtn.addEventListener('click', function(e) {
+        deleteBtn.addEventListener('click', function() {
             // Store parent node
             var parent = this.parentNode;
 
             // ID to be deleted
-            deleteID = parseInt(parent.id.split("-")[1]);
+            deleteID = parseInt(parent.id.split('-')[1]);
 
             // Add delete class
             deleteModal.classList.add('active');
@@ -357,14 +357,14 @@
 
         // Show all
         for (var c = 0; c < allCounters.length; c++) {
-            allCounters[c].classList.remove('disabled');
+            allCounters[c].classList.remove('invisible');
         }
 
         // If future, hide past
         if (currentSettings.counterVisibility === 'future') {
             for (var fc = 0; fc < allCounters.length; fc++) {
                 if (allCounters[fc].getElementsByClassName('event-type')[0].innerHTML.indexOf('Since') !== -1) {
-                    allCounters[fc].classList.add('disabled');
+                    allCounters[fc].classList.add('invisible');
                 }
             }
         }
@@ -373,7 +373,7 @@
         if (currentSettings.counterVisibility === 'past') {
             for (var pc = 0; pc < allCounters.length; pc++) {
                 if (allCounters[pc].getElementsByClassName('event-type')[0].innerHTML.indexOf('Until') !== -1) {
-                    allCounters[pc].classList.add('disabled');
+                    allCounters[pc].classList.add('invisible');
                 }
             }
         }
@@ -395,7 +395,56 @@
             allCounters[c].classList.remove('disabled');
         }
 
-        // TO DO, hide any outside range
+        // Define variables
+        var i, original, counterDate;
+
+        // Check the range
+        if (range === 'week') {
+            for (i = 0; i < allCounters.length; i++) {
+                original = allCounters[i].dataset.original;
+                counterDate = moment(original);
+                var weekAway = moment().startOf('day').add(1, 'week');
+                if (!counterDate.isSameOrBefore(weekAway)) {
+                    allCounters[i].classList.add('disabled');
+                }
+            }
+        } else if (range === 'month') {
+            for (i = 0; i < allCounters.length; i++) {
+                original = allCounters[i].dataset.original;
+                counterDate = moment(original);
+                var monthAway = moment().startOf('day').add(1, 'month');
+                if (!counterDate.isSameOrBefore(monthAway)) {
+                    allCounters[i].classList.add('disabled');
+                }
+            }
+        } else if (range === 'quarter') {
+            for (i = 0; i < allCounters.length; i++) {
+                original = allCounters[i].dataset.original;
+                counterDate = moment(original);
+                var quarterAway = moment().startOf('day').add(3, 'months');
+                if (!counterDate.isSameOrBefore(quarterAway)) {
+                    allCounters[i].classList.add('disabled');
+                }
+            }
+        } else if (range === 'half') {
+            for (i = 0; i < allCounters.length; i++) {
+                original = allCounters[i].dataset.original;
+                counterDate = moment(original);
+                var halfAway = moment().startOf('day').add(6, 'months');
+                if (!counterDate.isSameOrBefore(halfAway)) {
+                    allCounters[i].classList.add('disabled');
+                }
+            }
+        } else if (range === 'year') {
+            for (i = 0; i < allCounters.length; i++) {
+                original = allCounters[i].dataset.original;
+                counterDate = moment(original);
+                var yearAway = moment().startOf('day').add(1, 'year');
+                if (!counterDate.isSameOrBefore(yearAway)) {
+                    allCounters[i].classList.add('disabled');
+                }
+            }
+        }
     };
 
     /**
@@ -438,14 +487,14 @@
         // Create timer and store reference
         timer = setTimeout(function() {
             counters.classList.add('faded');
-        }, 5000);
+        }, 3000);
     };
 
     /**
      * Loads the user settings
      */
     var loadSettings = function() {
-        chrome.storage.sync.get("settings", function(data) {
+        chrome.storage.sync.get('settings', function(data) {
 
             // Check if settings exist
             if (typeof data.settings === 'undefined') return;
@@ -478,8 +527,8 @@
             // Wait 0.5s
             window.setTimeout(function() {
                 // Add transition to html, body
-                document.documentElement.style.transition = "0.5s ease all";
-                document.body.style.transition = "0.5s ease all";
+                document.documentElement.style.transition = '0.5s ease all';
+                document.body.style.transition = '0.5s ease all';
             }, 500);
 
             // Check filters
@@ -498,11 +547,11 @@
      */
     var saveSettings = function() {
        // Clear counters storage and set new counters
-        chrome.storage.sync.remove("settings", function() {
+        chrome.storage.sync.remove('settings', function() {
             chrome.storage.sync.set({
-                "settings": settingsObj
+                'settings': settingsObj
             }, function() {
-                console.log("Settings updated.");
+                console.log('Settings updated.');
                 loadSettings();
             });
         });
@@ -570,8 +619,8 @@
             addCounterForm.classList.add('active');
 
             // Ensure values are correct
-            document.getElementById('modal-header-title').innerHTML = "Add a New Day Counter";
-            document.getElementById('modal-submit').value = "Add Day Counter";
+            document.getElementById('modal-header-title').innerHTML = 'Add a New Day Counter';
+            document.getElementById('modal-submit').value = 'Add Day Counter';
 
             // Add class to body
             document.body.classList.add('active');
@@ -731,6 +780,10 @@
 
             // Set settings
             saveSettings();
+
+            // Close settings
+            settingsToggle.classList.remove('active');
+            settings.classList.remove('active');
 
         });
     };

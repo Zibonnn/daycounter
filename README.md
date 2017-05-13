@@ -15,13 +15,18 @@ Change the color scheme of the Day Counter page to any of the colors provided.
 
 # To Do
 
-- Add date range setting (show all counters within 30 days, etc.)
+- Change styling for "Today" events
 
 # Changelog
 
+### 3.0.2
+
+- Add date range filter for within the week, month, quarter, half-year, or year
+- Add optional privacy filter that fades / blurs counters on inactivity / page load
+
 ### 3.0.1
 
-- Fix repeat bug so to not cause recurrence until day after it has occured
+- Fix repeat bug so to not cause recurrence until day after it has occurred
 
 ### 3.0.0
 

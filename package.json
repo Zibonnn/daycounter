@@ -1,6 +1,6 @@
 {
   "name": "daycounter",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "description": "Chrome Extension to track days until or since events easily on each new tab.",
   "main": "js/scripts.js",
   "repository": {
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/RyanFitzgerald/daycounter#readme",
   "devDependencies": {
+    "eslint": "^3.19.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-concat": "^2.6.0",
