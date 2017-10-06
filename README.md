@@ -19,6 +19,10 @@ Change the color scheme of the Day Counter page to any of the colors provided.
 
 # Changelog
 
+### 3.0.3
+
+- Change way data is saved to `chrome.storage.sync`
+
 ### 3.0.2
 
 - Add date range filter for within the week, month, quarter, half-year, or year
