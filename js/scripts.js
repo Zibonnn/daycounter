@@ -210,13 +210,11 @@
      * Saves the current counter states to Chrome storage
      */
     var saveCounters = function() {
-        // Clear counters storage and set new counters
-        chrome.storage.sync.remove('counters', function() {
-            chrome.storage.sync.set({
-                'counters': countersObj
-            }, function() {
-                console.log('Counters updated.');
-            });
+        // Set new counters
+        chrome.storage.sync.set({
+            'counters': countersObj
+        }, function() {
+            console.log('Counters updated.');
         });
     };
 
@@ -268,9 +266,10 @@
                 createCounter(counterObj.event, loadedCounter.days, loadedCounter.type, loadedCounter.original, counterObj.recurring);
             }
 
+            
             // Set the counter IDs again
             setCounterIDs();
-
+            
             // Setup counters
             setupCounters();
         });
