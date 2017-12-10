@@ -19,6 +19,10 @@ Change the color scheme of the Day Counter page to any of the colors provided.
 
 # Changelog
 
+### 3.0.4
+
+- Updated `Sortable.js` to fix sorting counters 
+
 ### 3.0.3
 
 - Change way data is saved to `chrome.storage.sync`

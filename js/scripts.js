@@ -41,6 +41,7 @@
     Sortable.create(counters, {
         animation: 150,
         onEnd: function () {
+			console.log('heree')
             setCounterIDs();
         }
     });
